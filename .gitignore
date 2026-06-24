@@ -1,0 +1,52 @@
+# ========================
+# OS & Editor Artifacts
+# ========================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# ========================
+# AI Tool Runtime Caches
+# ========================
+# Cursor runtime cache/indexes (NOT .cursor/rules/)
+.cursor/cache/
+.cursor/index/
+.cursor/logs/
+
+# Claude Code session history & temp files
+.claude/history/
+.claude/tmp/
+.claude/*.log
+
+# Hermes / OpenClaw / OpenContext runtime artifacts
+.hermes/cache/
+.openclaw/.cache/
+.opencontext/.cache/
+
+# MCP Server local auth & logs
+.mcp-auth/
+.mcp-logs/
+
+# ========================
+# Build & Dependency Artifacts
+# ========================
+node_modules/
+vendor/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+
+# ========================
+# Validation & Linting Outputs
+# ========================
+.agentsmd-lint-report.json
+.validation-cache/
+*.tmp.md
