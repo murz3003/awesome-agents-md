@@ -3,8 +3,8 @@
 > Curated collection of universal context rules — `agents.md` patterns organized by domain and task. Compatible with Cursor, Claude Code, OpenCode, and any agent framework supporting structured context.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
-[![Domains](https://img.shields.io/badge/Domains-10-blue.svg)](#domains)
-[![Rules](https://img.shields.io/badge/Rules-40-green.svg)](#domains)
+[![Domains](https://img.shields.io/badge/Domains-11-blue.svg)](#domains)
+[![Rules](https://img.shields.io/badge/Rules-42-green.svg)](#domains)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 
 ---
@@ -105,9 +105,10 @@ awesome-agents-md/
 │   ├── general/                 # Meta-rules for working with AI agents
 │   ├── software-engineering/
 │   ├── data-ai-engineering/
-│   ├── content-creation/
 │   ├── product-management/
-│   ├── journalism/
+│   ├── writing/                 # Pure writing craft (clarity, structure, fact-checking)
+│   ├── writing-genres/          # Writing for specific subjects (news, tech blog, copy)
+│   ├── content-operations/      # Content as a function (strategy, audience, platform, brand)
 │   ├── hardware-engineering/
 │   ├── legal-compliance/
 │   ├── learning/
@@ -132,7 +133,7 @@ awesome-agents-md/
 
 ## 📂 Domains
 
-The collection currently spans **10 domains** with **40 rules**. Each domain is a directory; each task is a standalone `agents.md` file.
+The collection currently spans **11 domains** with **42 rules**. Each domain is a directory; each task is a standalone `agents.md` file.
 
 ### `general/` — Meta-Rules 🧠
 How to work *with* AI agents effectively, applicable across all domains.
@@ -161,26 +162,35 @@ How to work *with* AI agents effectively, applicable across all domains.
 | [data-analysis](./rules/data-ai-engineering/data-analysis.md) | EDA, statistics, and insight communication |
 | [prompt-engineering](./rules/data-ai-engineering/prompt-engineering.md) | Designing effective LLM prompts |
 
-### `content-creation/` — Content Creation ✍️
+### `writing/` — Writing Craft ✍️
+Pure, medium-neutral writing technique — applies to any subject.
 | Rule | Description |
 |------|-------------|
-| [content-strategy](./rules/content-creation/content-strategy.md) | Content planning and platform strategy |
-| [audience-engagement](./rules/content-creation/audience-engagement.md) | Building and engaging communities |
-| [platform-optimization](./rules/content-creation/platform-optimization.md) | Algorithm-aware platform tactics |
-| [personal-branding](./rules/content-creation/personal-branding.md) | Authentic personal brand development |
+| [clear-and-concise](./rules/writing/clear-and-concise.md) | Cutting wordiness, active voice, omitting needless words |
+| [structure-and-flow](./rules/writing/structure-and-flow.md) | Leading with the point, paragraph and sentence flow |
+| [fact-checking](./rules/writing/fact-checking.md) | Systematic verification and accuracy for any written work |
+
+### `writing-genres/` — Writing Genres 📑
+Writing craft applied to specific subjects and audiences.
+| Rule | Description |
+|------|-------------|
+| [news-writing](./rules/writing-genres/news-writing.md) | News structure, leads, and AP style |
+| [technical-blog](./rules/writing-genres/technical-blog.md) | Technical posts practitioners want to read |
+| [product-copywriting](./rules/writing-genres/product-copywriting.md) | Landing pages, CTAs, benefit-led marketing copy |
+
+### `content-operations/` — Content Operations 📣
+Content as a function — strategy, audience, platform, brand (not writing itself).
+| Rule | Description |
+|------|-------------|
+| [content-strategy](./rules/content-operations/content-strategy.md) | Content planning and platform strategy |
+| [audience-engagement](./rules/content-operations/audience-engagement.md) | Building and engaging communities |
+| [platform-optimization](./rules/content-operations/platform-optimization.md) | Algorithm-aware platform tactics |
+| [personal-branding](./rules/content-operations/personal-branding.md) | Authentic personal brand development |
 
 ### `product-management/` — Product Management 🎯
 | Rule | Description |
 |------|-------------|
 | [requirement-writing](./rules/product-management/requirement-writing.md) | Translating business ideas into value-driven, agile-deliverable requirements |
-
-### `journalism/` — Journalism 📰
-| Rule | Description |
-|------|-------------|
-| [news-writing](./rules/journalism/news-writing.md) | News structure, leads, and AP style |
-| [investigative-reporting](./rules/journalism/investigative-reporting.md) | Systematic investigation methods |
-| [interview-techniques](./rules/journalism/interview-techniques.md) | Conducting effective, ethical interviews |
-| [fact-checking](./rules/journalism/fact-checking.md) | Verification and accuracy standards |
 
 ### `hardware-engineering/` — Hardware Engineering 🔌
 | Rule | Description |
@@ -269,8 +279,8 @@ See the [Usage Guide](./docs/usage-guide.md) and [`tools/converter/README.md`](.
 
 ## 🗺️ Roadmap
 
-- [x] Core domain structure (10 domains)
-- [x] 40 foundational rules
+- [x] Core domain structure (11 domains)
+- [x] 42 foundational rules
 - [x] Consistent agents.md format
 - [ ] [OpenContext specification](./spec/opencontext.md) documentation
 - [x] [Converter tool](./tools/converter/) (TypeScript, pnpm workspace)
