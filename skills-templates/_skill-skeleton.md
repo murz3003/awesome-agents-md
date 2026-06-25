@@ -1,21 +1,16 @@
 <!--
-  SKILL.md skeleton — DO NOT use directly.
-  This file is a template. A build step (converter) reads `compose` below, pulls the
-  referenced rule bodies from `rules/`, and injects them into the designated slots to
-  produce a complete, triggerable skill.
+  SKILL.md skeleton — authoring guide only (the leading-underscore name means the
+  builder skips it). Copy this to <your-skill>.md under skills-templates/ to start.
 
-  How to author a new skill template:
-    1. Copy this file to <your-skill>.md under skills-templates/.
-    2. Fill the YAML frontmatter (name, description, triggers, compose).
-    3. Fill the Stance section (role, audience, tone) — this is what makes it an expert.
-    4. Leave the {{ INJECT ... }} placeholders intact; the builder replaces them.
-    5. Do NOT inline rule content here — reference it in `compose` to preserve single source of truth.
+  Reference style: skills do NOT inline rule bodies. Instead, `compose` below declares
+  which rules/ are pulled in; the builder copies each rule verbatim into the skill's own
+  `references/` directory in dist/. The main SKILL.md references them by relative path.
 -->
 ---
 name: <skill-name>
 description: <One line: what this skill does, in business value terms>
-# compose: declares which rules/ content gets injected, and into which slot.
-# Format: <slot-name>: [ list of rule paths under rules/ (without .md), in injection order ]
+# compose: declares which rules/ files get copied into the skill's references/ directory.
+#           Format: <slot>: [ list of rule paths under rules/ (without .md), in order ]
 compose:
   instructions: []      # e.g. [ product-management/requirement-writing ]
   output: []            # e.g. [ general/output-validation ]
@@ -48,19 +43,17 @@ discipline that distinguish this skill from a plain rule lookup.>
 
 ## Procedure (SOP)
 <The fixed, role-specific workflow this expert follows. This is what belongs in a skill,
-NOT in a task rule (task rules hold role-agnostic knowledge; skills hold role-specific flow).>
+NOT in a task rule (task rules hold role-agnostic knowledge; skills hold role-specific flow).
+Reference the relevant reference file(s) by name rather than inlining their content.>
 
-1. <Step 1 — e.g., "Diagnose first: audit input against the template, output only the gap, wait.">
+1. <Step 1 — e.g., "Diagnose first: audit input against the Instructions reference, output only the gap, wait.">
 2. <Step 2 — e.g., "Pick depth by scale (Large vs Small).">
 3. <Step 3 — e.g., "Apply First Principles + Pyramid Principle to structure the output.">
 4. <Step 4 — e.g., "Dehydrate value: cut every sentence that doesn't serve Should-we / What-to.">
 
-## Instructions
-<!-- BUILDER INJECTS HERE: the `instructions` slot is filled with the bodies of the rules
-     listed under frontmatter `compose.instructions`, in order. -->
-{{ INJECT instructions }}
+## References
+<List each composed rule by its output path under references/, with a one-line note on what
+the agent should read it for. The builder copies the rule files named in `compose` into
+references/, deduplicating when the same rule feeds multiple slots.>
 
-## Output
-<!-- BUILDER INJECTS HERE: the `output` slot is filled with the bodies of the rules
-     listed under frontmatter `compose.output`, in order. -->
-{{ INJECT output }}
+- `references/<rule-key>.md` — <what this reference provides and when to read it.>

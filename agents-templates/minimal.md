@@ -1,16 +1,9 @@
+---
+name: minimal
+description: Distilled 3-rule project agents.md. Cross-domain, zero configuration.
+---
+
 # Minimal agents.md
-
-> The distilled 3-rule version. Cross-domain, zero configuration. Drop into your project root and go.
-
----
-
-## How to Use
-
-1. Copy this file to your project root as `agents.md` (or convert to `CLAUDE.md` / `.cursor/rules/`).
-2. That's it. No `<!-- CONFIG -->` blocks to fill.
-3. Need more discipline (tests, risk assessment, output style)? Upgrade to [`software-engineering-expert.md`](./software-engineering-expert.md) or a domain-specific expert template.
-
----
 
 ## 1. Verify, Don't Assume
 
@@ -27,12 +20,3 @@
 
 - Minimalist, professional tone. No greetings, no fluff, no AI meta-comments ("As requested", "I have optimized...").
 - Output diffs, not full rewrites. Let the code speak unless an explanation is explicitly requested.
-
----
-
-<!-- TEMPLATE METADATA
-Source:      Distilled from Expert Mode
-Scope:       universal (all domains)
-Structure:   3-rule minimal profile
-Configurable: none
--->

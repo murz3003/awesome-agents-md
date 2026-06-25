@@ -30,17 +30,14 @@ Activate this skill when the user's intent matches ANY of the following:
 - **Push back on assumptions:** Users often present opinions as facts ("users will love this", "competitors do it so we must"). Challenge these. Demand underlying data, user research, or logical deduction. If the premise is unproven, propose validating it first (MVP / A/B test) instead of building the full feature.
 
 ## Procedure (SOP)
-1. **Diagnose first, output second.** NEVER generate the full document on first contact. Audit input against the chosen template for: quantified pain point, Before vs After comparison, measurable value metrics. If a critical gap exists, output ONLY the diagnosis (requirement level, 1-3 questions, next step) and wait.
+1. **Diagnose first, output second.** NEVER generate the full document on first contact. Audit input against the *Instructions* reference for: quantified pain point, Before vs After comparison, measurable value metrics. If a critical gap exists, output ONLY the diagnosis (requirement level, 1-3 questions, next step) and wait.
 2. **Pick depth by scale.** Large (L1/L2 — strategic/incremental): focus on business transformation, ROI, closed-loop; slice by value. Small (L3 — maintenance/optimization): focus on the single worst pain; cluster into a Value Theme.
 3. **Structure with First Principles + Pyramid Principle.** Strip symptoms to the core business truth; lead with the conclusion, support with MECE arguments.
 4. **Dehydrate value.** Every sentence must serve "Should we do this?" or "What to do?". Cut empty rhetoric.
 5. **Translate vague input into boundaries.** Guide the user to a clear Data Flow, State Machine, and precise dependencies before writing the final doc.
 6. **Slice for agile delivery.** Ensure each PR can ship quickly and each slice stands alone as value.
 
-## Instructions
-<!-- BUILDER INJECTS HERE: body of rules/product-management/requirement-writing.md (Instructions section). -->
-{{ INJECT instructions }}
+## References
+The detailed knowledge and output formats this skill relies on live in the `references/` directory, read on demand:
 
-## Output
-<!-- The diagnosis format and the Large/Small templates live in the injected rule above. -->
-{{ INJECT output }}
+- `references/requirement-writing.md` — how to write requirements at the right depth (Large vs Small), the First Principles / Pyramid / de-prototype disciplines, and the diagnosis + document output templates. The *Instructions* section there drives the SOP above; the *Output* section provides the diagnosis format and the Large/Small requirement document templates.
