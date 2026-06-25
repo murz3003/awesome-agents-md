@@ -50,3 +50,8 @@ __pycache__/
 .agentsmd-lint-report.json
 .validation-cache/
 *.tmp.md
+
+# ========================
+# Build Outputs
+# ========================
+dist/

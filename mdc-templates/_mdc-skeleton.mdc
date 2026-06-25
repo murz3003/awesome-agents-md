@@ -1,0 +1,25 @@
+<!--
+  .mdc skeleton — authoring guide only (leading-underscore name → builder skips it).
+  Copy this to <your-rule>.mdc under mdc-templates/ to start.
+
+  mdc templates produce self-contained Cursor rule files (inline expansion): the rule
+  bodies named in `compose` are spliced into the body where `{{ INJECT <slot> }}` appears.
+  Output goes to dist/cursor/<name>.mdc with Cursor's frontmatter.
+-->
+---
+description: <One line shown in Cursor's rule picker — be concrete>
+globs: <file patterns this rule applies to, e.g. "src/**/*.ts" — empty for always>
+alwaysApply: false
+# compose: rule keys (path under rules/, without .md) spliced into each slot in order.
+compose:
+  instructions: []      # e.g. [ software-engineering/api-design ]
+---
+
+# <Rule Display Name>
+
+<Optional one-paragraph framing: when this rule fires and why. Keep it short — Cursor
+shows this context to the model. Delete if the injected content is self-explanatory.>
+
+{{ INJECT instructions }}
+
+{{ INJECT output }}
