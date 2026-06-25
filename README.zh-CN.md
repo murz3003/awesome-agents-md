@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Domains](https://img.shields.io/badge/Domains-11-blue.svg)](#-领域)
-[![Rules](https://img.shields.io/badge/Rules-47-green.svg)](#-领域)
+[![Rules](https://img.shields.io/badge/Rules-48-green.svg)](#-领域)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.zh-CN.md)
 
 ---
@@ -143,7 +143,7 @@ awesome-agents-md/
 
 ## 📂 领域
 
-本集合目前覆盖 **11 个领域**、**47 条规则**。每个领域是一个目录；每个任务是一个独立的 `agents.md` 文件。
+本集合目前覆盖 **11 个领域**、**48 条规则**。每个领域是一个目录；每个任务是一个独立的 `agents.md` 文件。
 
 ### `general/` — 元规则 🧠
 如何高效地*与* AI 智能体协作，以及智能体*如何表达自己*，适用于所有领域。
@@ -165,6 +165,7 @@ awesome-agents-md/
 | [reply-discipline](./rules/general/communication/reply-discipline.md) | 先回答问题 —— 以结论为先、切题的回复 |
 | [output-hygiene](./rules/general/communication/output-hygiene.md) | 只交付成品，绝不输出内部过程 |
 | [expression-coach](./rules/general/communication/expression-coach.md) | 完成主任务后，末尾追加一条结构化的用词建议 |
+| [mentor-style](./rules/general/communication/mentor-style.md) | 教学取向的输出 —— 展示推理、对比方案、注解原因 |
 
 ### `software-engineering/` — 软件工程 💻
 | 规则 | 描述 |
@@ -301,7 +302,7 @@ dist/
 ## 🗺️ 路线图
 
 - [x] 核心领域结构（11 个领域）
-- [x] 47 条基础规则
+- [x] 48 条基础规则
 - [x] 一致的 agents.md 格式
 - [ ] [OpenContext 规范](./spec/opencontext.md) 文档
 - [x] [转换器工具](./tools/converter/)（TypeScript，pnpm workspace）

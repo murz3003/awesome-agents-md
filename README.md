@@ -6,7 +6,7 @@ English | **[简体中文](./README.zh-CN.md)**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Domains](https://img.shields.io/badge/Domains-11-blue.svg)](#domains)
-[![Rules](https://img.shields.io/badge/Rules-47-green.svg)](#domains)
+[![Rules](https://img.shields.io/badge/Rules-48-green.svg)](#domains)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 
 ---
@@ -143,7 +143,7 @@ awesome-agents-md/
 
 ## 📂 Domains
 
-The collection currently spans **11 domains** with **47 rules**. Each domain is a directory; each task is a standalone `agents.md` file.
+The collection currently spans **11 domains** with **48 rules**. Each domain is a directory; each task is a standalone `agents.md` file.
 
 ### `general/` — Meta-Rules 🧠
 How to work *with* AI agents and how an agent *expresses itself*, applicable across all domains.
@@ -165,6 +165,7 @@ How to work *with* AI agents and how an agent *expresses itself*, applicable acr
 | [reply-discipline](./rules/general/communication/reply-discipline.md) | Answering the question first — conclusion-led, on-point replies |
 | [output-hygiene](./rules/general/communication/output-hygiene.md) | Delivering only the finished result, never the internal process |
 | [expression-coach](./rules/general/communication/expression-coach.md) | Completing the task, then appending one structured wording suggestion |
+| [mentor-style](./rules/general/communication/mentor-style.md) | Teaching-oriented output — show the reasoning, compare options, annotate the why |
 
 ### `software-engineering/` — Software Engineering 💻
 | Rule | Description |
@@ -301,7 +302,7 @@ See the [Usage Guide](./docs/usage-guide.md) and [`tools/converter/README.md`](.
 ## 🗺️ Roadmap
 
 - [x] Core domain structure (11 domains)
-- [x] 47 foundational rules
+- [x] 48 foundational rules
 - [x] Consistent agents.md format
 - [ ] [OpenContext specification](./spec/opencontext.md) documentation
 - [x] [Converter tool](./tools/converter/) (TypeScript, pnpm workspace)
