@@ -2,9 +2,11 @@
 
 > Curated collection of universal context rules — `agents.md` patterns organized by domain and task. Compatible with Cursor, Claude Code, OpenCode, and any agent framework supporting structured context.
 
+English | **[简体中文](./README.zh-CN.md)**
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Domains](https://img.shields.io/badge/Domains-11-blue.svg)](#domains)
-[![Rules](https://img.shields.io/badge/Rules-42-green.svg)](#domains)
+[![Rules](https://img.shields.io/badge/Rules-45-green.svg)](#domains)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 
 ---
@@ -66,7 +68,12 @@ Browse the [`rules/`](./rules) directory, find the domain and task you need, and
 
 ### Option B: Build artifacts
 
-All template directories (`agents-templates/`, `mdc-templates/`, `claude-templates/`, `skills-templates/`) are **declarative skeletons** — they declare which `rules/` they compose via a `compose` frontmatter, and the builder materializes them into `dist/`:
+All template directories (`agents-templates/`, `mdc-templates/`, `claude-templates/`, `skills-templates/`) are **declarative skeletons** — they pull in `rules/` via self-contained body markers, and the builder materializes them into `dist/`. Each marker declares *what* rule, *how* (inline vs reference), and *where*:
+
+- `{{ INLINE:<rule-key>:<section> }}` — splice a rule section into the body (self-contained).
+- `{{ REF:<path>:<rule-key> }}` — copy a rule to `<path>` and leave a pointer (loaded on demand).
+
+Any template type can use either mode.
 
 ```bash
 git clone https://github.com/your-username/awesome-agents-md.git
@@ -77,7 +84,8 @@ pnpm build            # build everything → dist/
 pnpm build:agents     # project agents.md scaffolds → dist/agents/<name>/agents.md
 pnpm build:mdc        # Cursor .mdc rules       → dist/cursor/<name>.mdc
 pnpm build:claude     # CLAUDE.md profiles      → dist/claude/<name>/CLAUDE.md
-pnpm build:skills     # skills (rules in references/) → dist/skills/<name>/SKILL.md
+pnpm build:skills     # skills                  → dist/skills/<name>/SKILL.md
+pnpm build "agents:product-*"                  # build a subset (target:pattern, * = prefix wildcard)
 ```
 
 Output layout:
@@ -85,15 +93,14 @@ Output layout:
 ```
 dist/
 ├── agents/<name>/agents.md            # drop-in project context
-├── cursor/<name>.mdc                 # drop into .cursor/rules/
-├── claude/<name>/CLAUDE.md           # drop into project root
-└── skills/<name>/{SKILL.md, references/}   # triggerable skill
+├── cursor/<name>.mdc                  # drop into .cursor/rules/
+├── claude/<name>/CLAUDE.md            # drop into project root
+└── skills/<name>/{SKILL.md, references/}   # triggerable skill (refs copied on demand)
 ```
 
-- **agents.md / .mdc / CLAUDE.md** → rule content is **inlined** (self-contained).
-- **SKILL.md** → rule content is **referenced** via a sibling `references/` directory (read on demand).
+A skill commonly **inlines** its voice baseline (`general/communication/*`) and **references** its heavy domain playbook (read on demand).
 
-Each output also ships a `README.md` (for humans) recording how it was assembled. See [`tools/converter/README.md`](./tools/converter/README.md) for the build architecture and the `compose` contract.
+Each output also ships a `README.md` (for humans) recording how it was assembled. See [`tools/converter/README.md`](./tools/converter/README.md) for the build architecture and the marker contract.
 
 ---
 
@@ -102,12 +109,13 @@ Each output also ships a `README.md` (for humans) recording how it was assembled
 ```
 awesome-agents-md/
 ├── rules/                       # Source of truth — atomic rules (role-agnostic knowledge/patterns) by domain
-│   ├── general/                 # Meta-rules for working with AI agents
+│   ├── general/                 # Meta-rules for working with AI agents & how an agent expresses itself
+│   │   └── communication/      # Agent voice, persona, reply shape (the expression baseline)
 │   ├── software-engineering/
 │   ├── data-ai-engineering/
 │   ├── product-management/
 │   ├── writing/                 # Pure writing craft (clarity, structure, fact-checking)
-│   ├── writing-genres/          # Writing for specific subjects (news, tech blog, copy)
+│   ├── writing-subjects/          # Writing for specific subjects (news, tech blog, copy)
 │   ├── content-operations/      # Content as a function (strategy, audience, platform, brand)
 │   ├── hardware-engineering/
 │   ├── legal-compliance/
@@ -117,7 +125,7 @@ awesome-agents-md/
 ├── agents-templates/            # Project-level agents.md scaffolds (drop into project root)
 ├── mdc-templates/               # Cursor .mdc rule skeletons (flat rule files)
 ├── claude-templates/            # CLAUDE.md profile skeletons (project-root context)
-├── skills-templates/            # SKILL.md skeletons (role + stance + SOP); rules referenced, not inlined
+├── skills-templates/            # SKILL.md skeletons (role + stance + SOP); rules via inline/ref markers
 ├── examples/                    # Real-world usage examples
 ├── spec/                        # OpenContext specification
 ├── docs/                        # Documentation & usage guide
@@ -126,17 +134,19 @@ awesome-agents-md/
 │
 ├── dist/                        # Generated tool-specific files (gitignored)
 ├── CONTRIBUTING.md
-└── README.md
+├── CONTRIBUTING.zh-CN.md
+├── README.md
+└── README.zh-CN.md
 ```
 
 ---
 
 ## 📂 Domains
 
-The collection currently spans **11 domains** with **42 rules**. Each domain is a directory; each task is a standalone `agents.md` file.
+The collection currently spans **11 domains** with **45 rules**. Each domain is a directory; each task is a standalone `agents.md` file.
 
 ### `general/` — Meta-Rules 🧠
-How to work *with* AI agents effectively, applicable across all domains.
+How to work *with* AI agents and how an agent *expresses itself*, applicable across all domains.
 
 | Rule | Description |
 |------|-------------|
@@ -144,6 +154,15 @@ How to work *with* AI agents effectively, applicable across all domains.
 | [task-decomposition](./rules/general/task-decomposition.md) | Breaking complex work into actionable steps |
 | [output-validation](./rules/general/output-validation.md) | Verifying AI-generated outputs |
 | [context-management](./rules/general/context-management.md) | Managing context windows and conversation flow |
+
+#### `general/communication/` — Agent Communication 💬
+*How an agent talks — voice, persona, reply shape. These compose into skills/agents.md/CLAUDE.md as the shared expression baseline.*
+
+| Rule | Description |
+|------|-------------|
+| [human-voice](./rules/general/communication/human-voice.md) | Sounding like a competent human, not a machine (de-AI tone) |
+| [persona-coherence](./rules/general/communication/persona-coherence.md) | Building a stable, believable persona from durable stances |
+| [reply-discipline](./rules/general/communication/reply-discipline.md) | Answering the question first — conclusion-led, on-point replies |
 
 ### `software-engineering/` — Software Engineering 💻
 | Rule | Description |
@@ -170,13 +189,13 @@ Pure, medium-neutral writing technique — applies to any subject.
 | [structure-and-flow](./rules/writing/structure-and-flow.md) | Leading with the point, paragraph and sentence flow |
 | [fact-checking](./rules/writing/fact-checking.md) | Systematic verification and accuracy for any written work |
 
-### `writing-genres/` — Writing Genres 📑
+### `writing-subjects/` — Writing Subjects 📑
 Writing craft applied to specific subjects and audiences.
 | Rule | Description |
 |------|-------------|
-| [news-writing](./rules/writing-genres/news-writing.md) | News structure, leads, and AP style |
-| [technical-blog](./rules/writing-genres/technical-blog.md) | Technical posts practitioners want to read |
-| [product-copywriting](./rules/writing-genres/product-copywriting.md) | Landing pages, CTAs, benefit-led marketing copy |
+| [news-writing](./rules/writing-subjects/news-writing.md) | News structure, leads, and AP style |
+| [technical-blog](./rules/writing-subjects/technical-blog.md) | Technical posts practitioners want to read |
+| [product-copywriting](./rules/writing-subjects/product-copywriting.md) | Landing pages, CTAs, benefit-led marketing copy |
 
 ### `content-operations/` — Content Operations 📣
 Content as a function — strategy, audience, platform, brand (not writing itself).
@@ -280,14 +299,14 @@ See the [Usage Guide](./docs/usage-guide.md) and [`tools/converter/README.md`](.
 ## 🗺️ Roadmap
 
 - [x] Core domain structure (11 domains)
-- [x] 42 foundational rules
+- [x] 45 foundational rules
 - [x] Consistent agents.md format
 - [ ] [OpenContext specification](./spec/opencontext.md) documentation
 - [x] [Converter tool](./tools/converter/) (TypeScript, pnpm workspace)
   - [x] Build agents scaffolds → `dist/agents/<name>/agents.md`
   - [x] Build Cursor rules → `dist/cursor/<name>.mdc`
   - [x] Build CLAUDE.md profiles → `dist/claude/<name>/CLAUDE.md`
-  - [x] Build skills → `dist/skills/<name>/` (rules in `references/`, referenced)
+  - [x] Build skills → `dist/skills/<name>/` (rules via inline/ref markers)
   - [ ] OpenCode output
 - [x] Project scaffolds in `agents-templates/` (`minimal.md`, `software-engineering-expert.md`, `product-expert.md`)
 - [x] Cursor rule skeletons in `mdc-templates/`
@@ -295,7 +314,7 @@ See the [Usage Guide](./docs/usage-guide.md) and [`tools/converter/README.md`](.
 - [x] Skill skeletons in `skills-templates/` (SKILL.md format, rule-referenced)
 - [ ] Real-world examples
 - [ ] Validator tool
-- [ ] Contributing guide
+- [x] [Contributing guide](./CONTRIBUTING.md)
 
 ---
 

@@ -1,43 +1,60 @@
 import { resolve } from "node:path";
+import { readRuleRaw } from "../rules.js";
 import { MDC_TEMPLATES_DIR, DIST_MDC_DIR } from "../paths.js";
 import { writeIfChanged } from "../io.js";
 import { loadTemplates, type LoadedTemplate } from "../template.js";
-import { injectAll } from "../inject.js";
-import { composedRuleKeys } from "../frontmatter.js";
+import { resolveBody } from "../markers.js";
 
 export interface BuildResult {
   name: string;
   outFile: string;
 }
 
+interface Built {
+  result: BuildResult;
+  description: string;
+  globs: string;
+}
+
 /**
  * Build every mdc-templates/* into dist/cursor/<name>.mdc (flat, matching Cursor's
  * `.cursor/rules/*.mdc` layout).
  *
- * Inline expansion (same as agents), but the output keeps a Cursor-style frontmatter
- * (description / globs / alwaysApply) reconstructed from the source scalars. The build
- * metadata fields (name, compose) are dropped. A single directory-level README.md lists
- * all generated rules (flat files don't get per-file READMEs).
+ * Marker-driven: INLINE splices rule content; REF copies a rule to <path> *relative to
+ * dist/cursor/* and leaves a pointer. Because .mdc files are flat, any referenced rule
+ * files land under dist/cursor/<path> and must be carried alongside the .mdc into
+ * `.cursor/rules/`. The output keeps a Cursor-style frontmatter (description / globs /
+ * alwaysApply) reconstructed from the source scalars; build metadata (name) is dropped.
  */
-export function buildMdc(): BuildResult[] {
-  const templates = loadTemplates(MDC_TEMPLATES_DIR);
-  const results = templates.map((t) => buildOne(t));
-  writeIfChanged(resolve(DIST_MDC_DIR, "README.md"), renderCursorIndex(templates));
-  return results;
+export function buildMdc(filter?: (name: string) => boolean): BuildResult[] {
+  const templates = loadTemplates(MDC_TEMPLATES_DIR).filter((t) => !filter || filter(t.name));
+  const built = templates.map((t) => buildOne(t));
+  // Only (re)write the directory index when building the whole set; a filtered build would
+  // otherwise produce an index describing a partial catalog.
+  if (!filter) {
+    writeIfChanged(resolve(DIST_MDC_DIR, "README.md"), renderCursorIndex(built));
+  }
+  return built.map((b) => b.result);
 }
 
-function buildOne(t: LoadedTemplate): BuildResult {
-  const body = injectAll(t.body, t.data.compose);
+function buildOne(t: LoadedTemplate): Built {
+  const { body, refs } = resolveBody(t.body);
   const fm = renderCursorFrontmatter(t.data.scalars);
   const outFile = resolve(DIST_MDC_DIR, `${t.name}.mdc`);
+  for (const r of refs) {
+    writeIfChanged(resolve(DIST_MDC_DIR, r.targetPath), `${readRuleRaw(r.ruleKey)}\n`);
+  }
   writeIfChanged(outFile, `${fm}\n${body.trim()}\n`);
-  return { name: t.name, outFile };
+  return {
+    result: { name: t.name, outFile },
+    description: t.data.scalars.description ?? "",
+    globs: t.data.scalars.globs ?? "",
+  };
 }
 
 /**
  * Reconstruct Cursor frontmatter from source scalars, preserving only the fields Cursor
- * recognizes (description / globs / alwaysApply). `name` and `compose` (build metadata)
- * are excluded.
+ * recognizes (description / globs / alwaysApply). `name` (build metadata) is excluded.
  */
 function renderCursorFrontmatter(scalars: Record<string, string>): string {
   const lines = ["---"];
@@ -60,24 +77,26 @@ function needsQuotes(value: string): boolean {
   return /[:#{}[\],&*?|<>=!%@`]/.test(value) || value.includes('"');
 }
 
-/** Directory-level README listing all generated .mdc rules and their composed sources. */
-function renderCursorIndex(templates: LoadedTemplate[]): string {
-  const rows = templates
-    .map((t) => {
-      const rules = composedRuleKeys(t.data.compose);
-      const ruleList = rules.length
-        ? rules.map((k) => `rules/${k}.md`).join(", ")
-        : "no rules (self-contained)";
-      return `- \`${t.name}.mdc\` — ${t.data.scalars.description ?? ""} (composes: ${ruleList})`;
+/**
+ * Directory-level README describing the Cursor rules in this folder as they are — what each
+ * does and when it applies — without revealing how they were assembled. Each entry is a
+ * self-description of the rule, the way a hand-written catalog would list it.
+ */
+function renderCursorIndex(built: Built[]): string {
+  const rows = built
+    .map(({ result, description, globs }) => {
+      const scope = globs.trim() ? `applies to \`${globs}\`` : "applies always";
+      return `- \`${result.name}.mdc\` — ${description || "(no description)"} (${scope}).`;
     })
     .join("\n");
   return `# Cursor rules
 
-Generated from \`mdc-templates/\` (inline expansion). Drop these into your project's \`.cursor/rules/\`.
+Drop these into your project's \`.cursor/rules/\`. If a rule references a file (rather than
+being self-contained), carry that file alongside the \`.mdc\`.
 
 ${rows}
 
 ---
-_Regenerate with \`pnpm build:mdc\`. Edit the source templates, not these outputs._
+_Regenerate with \`pnpm build:mdc\`._
 `;
 }

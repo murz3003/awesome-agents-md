@@ -1,13 +1,6 @@
 ---
 name: engineering-discipline
 description: Engineering discipline — enforce review and testing rigor when changing code (review process, testing pyramid, verifiable goals).
-compose:
-  instructions:
-    - software-engineering/code-review
-    - software-engineering/testing
-  output:
-    - software-engineering/code-review
-    - software-engineering/testing
 ---
 
 # Engineering Discipline
@@ -37,5 +30,5 @@ Activate this skill when the user's intent matches ANY of the following:
 ## References
 The detailed review process and testing strategy this skill relies on live in the `references/` directory, read on demand:
 
-- `references/code-review.md` — the review process, what to look for, and how to give constructive feedback.
-- `references/testing.md` — the testing pyramid, AAA pattern, and how to turn tasks into verifiable goals. The *Output* sections of both define the review/testing output formats.
+- {{ REF:references/code-review.md:software-engineering/code-review.md }} — the review process, what to look for, and how to give constructive feedback.
+- {{ REF:references/testing.md:software-engineering/testing.md }} — the testing pyramid, AAA pattern, and how to turn tasks into verifiable goals. The *Output* sections of both define the review/testing output formats.

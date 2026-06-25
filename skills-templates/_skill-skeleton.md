@@ -2,18 +2,20 @@
   SKILL.md skeleton — authoring guide only (the leading-underscore name means the
   builder skips it). Copy this to <your-skill>.md under skills-templates/ to start.
 
-  Reference style: skills do NOT inline rule bodies. Instead, `compose` below declares
-  which rules/ are pulled in; the builder copies each rule verbatim into the skill's own
-  `references/` directory in dist/. The main SKILL.md references them by relative path.
+  Marker-driven composition (no `compose` in frontmatter). A skill commonly REFERENCES
+  large domain knowledge (read on demand) and may INLINE its "voice" baseline. Declare
+  both in the BODY:
+    {{ INLINE:<rule-key> }}              splice a rule's whole body here
+    {{ INLINE:<rule-key>:<section> }}    splice one `## <section>` body
+    {{ REF:<path>:<rule-key> }}          copy the rule to <path> (relative to this skill's
+                                         own dir under dist/skills/<name>/) and leave a pointer
+  <rule-key> is a path under rules/ (with or without .md). The frontmatter is build metadata
+  only — the builder strips it; the output is a SKILL.md (pure markdown) plus any referenced
+  rule files copied alongside it.
 -->
 ---
 name: <skill-name>
 description: <One line: what this skill does, in business value terms>
-# compose: declares which rules/ files get copied into the skill's references/ directory.
-#           Format: <slot>: [ list of rule paths under rules/ (without .md), in order ]
-compose:
-  instructions: []      # e.g. [ product-management/requirement-writing ]
-  output: []            # e.g. [ general/output-validation ]
 ---
 
 # <Skill Display Name>
@@ -31,7 +33,8 @@ Activate this skill when the user's intent matches ANY of:
 
 ## Stance
 <This section is what turns a generic skill into an expert. State the role, audience, and
-discipline that distinguish this skill from a plain rule lookup.>
+discipline that distinguish this skill from a plain rule lookup. A "voice" baseline
+(general/communication/*) can be INLINEd here if you want shared expression rules.>
 
 - **Role:** <Who the agent acts as — e.g., "a Product Expert speaking to stakeholders and management".>
 - **Audience & Scope:** <Who the output is for, and the hard boundary — e.g., "Why & What only, never technical implementation".>
@@ -43,8 +46,7 @@ discipline that distinguish this skill from a plain rule lookup.>
 
 ## Procedure (SOP)
 <The fixed, role-specific workflow this expert follows. This is what belongs in a skill,
-NOT in a task rule (task rules hold role-agnostic knowledge; skills hold role-specific flow).
-Reference the relevant reference file(s) by name rather than inlining their content.>
+NOT in a task rule (task rules hold role-agnostic knowledge; skills hold role-specific flow).>
 
 1. <Step 1 — e.g., "Diagnose first: audit input against the Instructions reference, output only the gap, wait.">
 2. <Step 2 — e.g., "Pick depth by scale (Large vs Small).">
@@ -52,8 +54,7 @@ Reference the relevant reference file(s) by name rather than inlining their cont
 4. <Step 4 — e.g., "Dehydrate value: cut every sentence that doesn't serve Should-we / What-to.">
 
 ## References
-<List each composed rule by its output path under references/, with a one-line note on what
-the agent should read it for. The builder copies the rule files named in `compose` into
-references/, deduplicating when the same rule feeds multiple slots.>
+<Detailed domain knowledge this skill relies on, read on demand. Use {{ REF:... }} markers
+(one per rule) — the builder copies each rule to its target path and leaves a pointer.>
 
-- `references/<rule-key>.md` — <what this reference provides and when to read it.>
+- {{ REF:references/<rule-name>.md:product-management/requirement-writing.md }} — <what this reference provides and when to read it.>

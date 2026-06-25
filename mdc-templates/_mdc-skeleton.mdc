@@ -2,17 +2,22 @@
   .mdc skeleton — authoring guide only (leading-underscore name → builder skips it).
   Copy this to <your-rule>.mdc under mdc-templates/ to start.
 
-  mdc templates produce self-contained Cursor rule files (inline expansion): the rule
-  bodies named in `compose` are spliced into the body where `{{ INJECT <slot> }}` appears.
-  Output goes to dist/cursor/<name>.mdc with Cursor's frontmatter.
+  Marker-driven composition (no `compose` in frontmatter). Declare rule composition in the BODY:
+    {{ INLINE:<rule-key> }}              splice a rule's whole body here
+    {{ INLINE:<rule-key>:<section> }}    splice one `## <section>` body
+    {{ REF:<path>:<rule-key> }}          copy the rule to <path> (relative to dist/cursor/, the
+                                         flat .mdc output dir) and leave a pointer here.
+                                         NOTE: .mdc files are flat, so referenced rule files land
+                                         under dist/cursor/<path> — carry them alongside into
+                                         .cursor/rules/.
+  <rule-key> is a path under rules/ (with or without .md), e.g. software-engineering/api-design.
+  Output goes to dist/cursor/<name>.mdc with a Cursor frontmatter (description/globs/alwaysApply)
+  reconstructed from the scalars below.
 -->
 ---
 description: <One line shown in Cursor's rule picker — be concrete>
 globs: <file patterns this rule applies to, e.g. "src/**/*.ts" — empty for always>
 alwaysApply: false
-# compose: rule keys (path under rules/, without .md) spliced into each slot in order.
-compose:
-  instructions: []      # e.g. [ software-engineering/api-design ]
 ---
 
 # <Rule Display Name>
@@ -20,6 +25,10 @@ compose:
 <Optional one-paragraph framing: when this rule fires and why. Keep it short — Cursor
 shows this context to the model. Delete if the injected content is self-explanatory.>
 
-{{ INJECT instructions }}
+## Guidance
 
-{{ INJECT output }}
+{{ INLINE:software-engineering/api-design:Instructions }}
+
+## Output
+
+{{ INLINE:software-engineering/api-design:Output }}

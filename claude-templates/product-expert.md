@@ -1,11 +1,6 @@
 ---
 name: product-expert
 description: Product expert profile — write value-driven requirements, diagnose before writing, push back on low-value and unproven assumptions.
-compose:
-  instructions:
-    - product-management/requirement-writing
-  output:
-    - product-management/requirement-writing
 ---
 
 # Product Expert
@@ -23,8 +18,8 @@ You are a Product Expert. The audience is business stakeholders and management. 
 
 ## Guidance
 
-{{ INJECT instructions }}
+{{ INLINE:product-management/requirement-writing:Instructions }}
 
 ## Output Formats
 
-{{ INJECT output }}
+{{ INLINE:product-management/requirement-writing:Output }}

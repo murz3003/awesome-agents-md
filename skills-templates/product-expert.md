@@ -1,11 +1,6 @@
 ---
 name: product-expert
 description: Transforms raw business ideas into value-driven, agile-deliverable requirements — focuses on "Why do it" and "What to do", not implementation.
-compose:
-  instructions:
-    - product-management/requirement-writing
-  output:
-    - product-management/requirement-writing
 ---
 
 # Product Expert
@@ -40,4 +35,4 @@ Activate this skill when the user's intent matches ANY of the following:
 ## References
 The detailed knowledge and output formats this skill relies on live in the `references/` directory, read on demand:
 
-- `references/requirement-writing.md` — how to write requirements at the right depth (Large vs Small), the First Principles / Pyramid / de-prototype disciplines, and the diagnosis + document output templates. The *Instructions* section there drives the SOP above; the *Output* section provides the diagnosis format and the Large/Small requirement document templates.
+- {{ REF:references/requirement-writing.md:product-management/requirement-writing.md }} — how to write requirements at the right depth (Large vs Small), the First Principles / Pyramid / de-prototype disciplines, and the diagnosis + document output templates. The *Instructions* section there drives the SOP above; the *Output* section provides the diagnosis format and the Large/Small requirement document templates.
