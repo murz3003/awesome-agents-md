@@ -8,6 +8,8 @@
   "scripts": {
     "build": "tsx tools/converter/src/index.ts build",
     "build:agents": "tsx tools/converter/src/index.ts build --target agents",
+    "build:mdc": "tsx tools/converter/src/index.ts build --target mdc",
+    "build:claude": "tsx tools/converter/src/index.ts build --target claude",
     "build:skills": "tsx tools/converter/src/index.ts build --target skills",
     "clean": "tsx tools/converter/src/index.ts clean",
     "typecheck": "tsc --noEmit"

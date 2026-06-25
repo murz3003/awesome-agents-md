@@ -1,9 +1,12 @@
 /**
- * Minimal YAML frontmatter parser.
+ * Minimal YAML frontmatter parser for template sources.
  *
- * The skill templates use a tiny, well-defined subset of YAML: scalars, a `compose`
- * mapping whose values are block sequences of strings. Hand-rolling avoids pulling a
- * full YAML dependency for ~10 lines of structured data.
+ * Templates carry a tiny, well-defined YAML subset: scalars and a `compose` mapping whose
+ * values are block sequences of strings. Hand-rolled to avoid a full YAML dependency.
+ *
+ * `name` is required for agents/skills/claude templates (derives the output path) but
+ * optional for mdc templates (the mdc `description` is the meaningful field). All raw
+ * scalars are preserved so each builder can emit the fields its format needs.
  */
 
 export interface ComposeSpec {
@@ -11,19 +14,20 @@ export interface ComposeSpec {
   [slot: string]: string[];
 }
 
-export interface SkillFrontmatter {
-  name: string;
-  description: string;
+export interface TemplateFrontmatter {
+  name?: string;
+  /** Every top-level scalar found, keyed by field name (name, description, globs, ...). */
+  scalars: Record<string, string>;
   compose: ComposeSpec;
 }
 
 export interface ParsedFrontmatter {
-  data: SkillFrontmatter;
-  /** The body that follows the closing `---`. */
+  data: TemplateFrontmatter;
+  /** The body that follows the closing `---` (frontmatter stripped). */
   body: string;
 }
 
-const FENCE = /^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/;
+const FENCE = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/;
 
 export function parseFrontmatter(raw: string): ParsedFrontmatter {
   const match = raw.match(FENCE);
@@ -31,23 +35,18 @@ export function parseFrontmatter(raw: string): ParsedFrontmatter {
     throw new Error("Missing YAML frontmatter. Expected a leading `---` fenced block.");
   }
   const [, yaml, body] = match;
-  const data = parseYaml(yaml);
-  return { data, body };
+  return { data: parseYaml(yaml), body };
 }
 
-function parseYaml(yaml: string): SkillFrontmatter {
-  const name = scalar(yaml, "name");
-  const description = scalar(yaml, "description");
+function parseYaml(yaml: string): TemplateFrontmatter {
+  const scalars: Record<string, string> = {};
   const compose = parseCompose(yaml);
-  if (!name) throw new Error("Frontmatter missing required field: name");
-  if (!description) throw new Error("Frontmatter missing required field: description");
-  return { name, description, compose };
-}
-
-function scalar(yaml: string, key: string): string {
-  const re = new RegExp(`^${key}:\\s*(.+?)\\s*$`, "m");
-  const m = yaml.match(re);
-  return m ? stripQuotes(m[1]).trim() : "";
+  for (const line of yaml.split(/\r?\n/)) {
+    // A top-level scalar: `key: value`, not a `compose:` mapping line.
+    const m = line.match(/^([\w-]+):\s*(.+?)\s*$/);
+    if (m) scalars[m[1]] = stripQuotes(m[2]).trim();
+  }
+  return { name: scalars.name, scalars, compose };
 }
 
 function stripQuotes(value: string): string {
@@ -63,23 +62,35 @@ function parseCompose(yaml: string): ComposeSpec {
   const composeStart = yaml.indexOf("compose:");
   if (composeStart === -1) return compose;
 
-  // Operate on lines under the `compose:` key, at indent level 2 (slot) / 4 (item).
   const lines = yaml.slice(composeStart).split(/\r?\n/);
   let currentSlot = "";
   for (const line of lines.slice(1)) {
-    // Stop at the next top-level key (non-indented line).
-    if (/\S/.test(line) && /^\S/.test(line)) break;
+    if (/\S/.test(line) && /^\S/.test(line)) break; // next top-level key
     const slotMatch = line.match(/^  ([\w-]+):\s*$/);
     if (slotMatch) {
       currentSlot = slotMatch[1];
       compose[currentSlot] = [];
       continue;
     }
-    // List items are indented further than the slot (typically 4 spaces).
     const itemMatch = line.match(/^\s+-\s+(.+?)\s*$/);
     if (itemMatch && currentSlot) {
       compose[currentSlot].push(stripQuotes(itemMatch[1]).trim());
     }
   }
   return compose;
+}
+
+/** All unique rule keys referenced anywhere in `compose`, in first-seen order. */
+export function composedRuleKeys(compose: ComposeSpec): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const keys of Object.values(compose)) {
+    for (const k of keys) {
+      if (!seen.has(k)) {
+        seen.add(k);
+        out.push(k);
+      }
+    }
+  }
+  return out;
 }

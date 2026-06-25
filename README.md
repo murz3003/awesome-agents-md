@@ -64,9 +64,9 @@ This fragmentation creates problems:
 
 Browse the [`rules/`](./rules) directory, find the domain and task you need, and copy the markdown content into your tool's rule file.
 
-### Option B: Build templates & skills
+### Option B: Build artifacts
 
-Templates and skills are **built** from canonical sources into `dist/` by the converter:
+All template directories (`agents-templates/`, `mdc-templates/`, `claude-templates/`, `skills-templates/`) are **declarative skeletons** — they declare which `rules/` they compose via a `compose` frontmatter, and the builder materializes them into `dist/`:
 
 ```bash
 git clone https://github.com/your-username/awesome-agents-md.git
@@ -74,16 +74,26 @@ cd awesome-agents-md
 pnpm install
 
 pnpm build            # build everything → dist/
-pnpm build:agents     # only project agents.md scaffolds  → dist/agents/<name>/agents.md
-pnpm build:skills     # only skills (rules injected)       → dist/skills/<name>/SKILL.md
+pnpm build:agents     # project agents.md scaffolds → dist/agents/<name>/agents.md
+pnpm build:mdc        # Cursor .mdc rules       → dist/cursor/<name>.mdc
+pnpm build:claude     # CLAUDE.md profiles      → dist/claude/<name>/CLAUDE.md
+pnpm build:skills     # skills (rules in references/) → dist/skills/<name>/SKILL.md
 ```
 
-Then grab what you need:
+Output layout:
 
-- **Project context** → copy `dist/agents/<scaffold>/agents.md` to your project root (or your tool's equivalent: `CLAUDE.md`, `.cursor/rules/`).
-- **Skill** → drop `dist/skills/<skill>/SKILL.md` into your skill-aware tool.
+```
+dist/
+├── agents/<name>/agents.md            # drop-in project context
+├── cursor/<name>.mdc                 # drop into .cursor/rules/
+├── claude/<name>/CLAUDE.md           # drop into project root
+└── skills/<name>/{SKILL.md, references/}   # triggerable skill
+```
 
-See [`tools/converter/README.md`](./tools/converter/README.md) for the build architecture and the `compose` injection contract.
+- **agents.md / .mdc / CLAUDE.md** → rule content is **inlined** (self-contained).
+- **SKILL.md** → rule content is **referenced** via a sibling `references/` directory (read on demand).
+
+Each output also ships a `README.md` (for humans) recording how it was assembled. See [`tools/converter/README.md`](./tools/converter/README.md) for the build architecture and the `compose` contract.
 
 ---
 
@@ -103,9 +113,10 @@ awesome-agents-md/
 │   ├── learning/
 │   └── relationship/
 │
-├── agents-templates/            # Project-level agents.md scaffolds (drop into project root as constant context)
-├── skills-templates/            # SKILL.md skeletons (role + stance + SOP placeholders); a build script injects
-│                                #   rules/ content to produce a complete, triggerable skill
+├── agents-templates/            # Project-level agents.md scaffolds (drop into project root)
+├── mdc-templates/               # Cursor .mdc rule skeletons (flat rule files)
+├── claude-templates/            # CLAUDE.md profile skeletons (project-root context)
+├── skills-templates/            # SKILL.md skeletons (role + stance + SOP); rules referenced, not inlined
 ├── examples/                    # Real-world usage examples
 ├── spec/                        # OpenContext specification
 ├── docs/                        # Documentation & usage guide
@@ -264,12 +275,14 @@ See the [Usage Guide](./docs/usage-guide.md) and [`tools/converter/README.md`](.
 - [ ] [OpenContext specification](./spec/opencontext.md) documentation
 - [x] [Converter tool](./tools/converter/) (TypeScript, pnpm workspace)
   - [x] Build agents scaffolds → `dist/agents/<name>/agents.md`
-  - [x] Build skills → `dist/skills/<name>/` (rules injected via `compose`)
-  - [ ] Cursor (`.mdc`) output
-  - [ ] Claude (`CLAUDE.md`) output
+  - [x] Build Cursor rules → `dist/cursor/<name>.mdc`
+  - [x] Build CLAUDE.md profiles → `dist/claude/<name>/CLAUDE.md`
+  - [x] Build skills → `dist/skills/<name>/` (rules in `references/`, referenced)
   - [ ] OpenCode output
 - [x] Project scaffolds in `agents-templates/` (`minimal.md`, `software-engineering-expert.md`, `product-expert.md`)
-- [x] Skill skeletons in `skills-templates/` (SKILL.md format, with rule-injection placeholders)
+- [x] Cursor rule skeletons in `mdc-templates/`
+- [x] CLAUDE.md profile skeletons in `claude-templates/`
+- [x] Skill skeletons in `skills-templates/` (SKILL.md format, rule-referenced)
 - [ ] Real-world examples
 - [ ] Validator tool
 - [ ] Contributing guide

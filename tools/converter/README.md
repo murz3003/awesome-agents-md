@@ -1,87 +1,89 @@
 # Converter / Builder
 
-Builds the canonical sources (`rules/`, `agents-templates/`, `skills-templates/`) into ready-to-use artifacts under `dist/`.
+Materializes the declarative template sources into ready-to-use artifacts under `dist/`.
 
 ## Architecture
 
 ```
-rules/              atomic rule knowledge base (single source of truth)
-agents-templates/   project-level agents.md scaffolds ──► dist/agents/<name>/agents.md
-skills-templates/   SKILL.md skeletons (role+stance+SOP) ──► dist/skills/<name>/{SKILL.md,README.md}
-                          │                                       │
-                          └── compose frontmatter declares ─────┘
-                              which rules/ sections get injected
+rules/                atomic rule knowledge base (single source of truth — content)
+        │
+        ▼  compose (declarative reference)
+agents-templates/     project agents.md scaffolds   ──► dist/agents/<name>/agents.md      (inlined)
+mdc-templates/        Cursor .mdc rule skeletons     ──► dist/cursor/<name>.mdc            (inlined)
+claude-templates/     CLAUDE.md profile skeletons    ──► dist/claude/<name>/CLAUDE.md      (inlined)
+skills-templates/     SKILL.md skeletons             ──► dist/skills/<name>/{SKILL.md,references/}  (referenced)
 ```
 
-The three source directories are **independent**:
+**One principle, two product modes:**
 
-- `rules/` — role-agnostic knowledge/patterns. Each rule is a standalone `## Role` / `## Instructions` / `## Output` file. Nothing is built from rules alone.
-- `agents-templates/` — finished project contexts. Built by **copy + strip** of the `## How to Use` authoring hint. No injection.
-- `skills-templates/` — skill skeletons carrying role, stance, and SOP, but with `{{ INJECT <slot> }}` placeholders where rule knowledge goes. The builder resolves these via the `compose` frontmatter.
+- **Source = declarative.** No template inlines rule bodies. Each template's `compose` frontmatter declares which `rules/` it pulls in. `rules/` stays the single source of truth.
+- **Product = two modes.** `agents` / `mdc` / `claude` produce **self-contained** files (rule bodies spliced in where `{{ INJECT <slot> }}` appears). `skills` produce a **referenced** bundle (rules copied into a sibling `references/` dir, the main file points at them).
 
-## Commands
+## The `compose` contract
 
-```bash
-pnpm install          # one-time
-pnpm build            # build agents + skills into dist/
-pnpm build:agents     # only agents scaffolds
-pnpm build:skills     # only skills
-pnpm clean            # remove dist/
-pnpm typecheck        # tsc --noEmit
-```
-
-## Output Layout
-
-```
-dist/
-├── agents/
-│   ├── minimal/agents.md
-│   ├── product-expert/agents.md
-│   └── software-engineering-expert/agents.md
-└── skills/
-    └── product-expert/
-        ├── SKILL.md      # triggerable skill, rules injected
-        └── README.md     # manifest of composed rules
-```
-
-## The `compose` Contract
-
-A skill template declares which rule sections it pulls in, in its YAML frontmatter:
+Every template carries YAML frontmatter:
 
 ```yaml
 ---
-name: product-expert
-description: <one line>
+name: product-expert                  # output name (dir/file stem); optional for mdc
+description: <one line>               # also used as Cursor's rule description
 compose:
-  instructions:
+  instructions:                       # slot name → ordered list of rule keys
     - product-management/requirement-writing
   output:
     - product-management/requirement-writing
 ---
 ```
 
-- Each key under `compose` is a **slot name** matching a `{{ INJECT <slot> }}` marker in the body.
-- Each value is an ordered list of rule keys (path under `rules/`, without `.md`).
-- The builder slices each referenced rule by its `## ` heading: slot `instructions` → the rule's `## Instructions` body; slot `output` → its `## Output` body.
-- Multiple rules in one slot are concatenated, separated by `---`.
-- A slot with a marker but no rules is a build error (surfaces template bugs early).
+- `compose` keys are **slot names**. For inline products, a slot matches a `{{ INJECT <slot> }}` marker in the body; the builder splices in each rule's `## <Slot-Heading>` body (slot `instructions` → `## Instructions`, slot `output` → `## Output`). For referenced products, slots only determine *which* rules get copied to `references/`.
+- Rule keys are paths under `rules/` without the `.md` (e.g. `software-engineering/testing`).
+- For skills, rules are flattened to `references/<basename>.md` and deduplicated across slots.
 
-### Slot → heading map
+## Commands
 
-| Slot          | Rule section injected |
-|---------------|-----------------------|
-| `instructions`| `## Instructions`     |
-| `output`      | `## Output`           |
+```bash
+pnpm install          # one-time
+pnpm build            # build all four targets → dist/
+pnpm build:agents     # agents scaffolds
+pnpm build:mdc        # Cursor .mdc rules
+pnpm build:claude     # CLAUDE.md profiles
+pnpm build:skills     # skills
+pnpm clean            # remove dist/
+pnpm typecheck        # tsc --noEmit
+```
 
-## Adding a New Skill
+## What the builder strips / keeps
 
-1. Copy `skills-templates/_skill-skeleton.md` to `skills-templates/<your-skill>.md`.
-2. Fill the frontmatter (`name`, `description`, `compose`) and the Stance / Procedure sections.
-3. Keep the `{{ INJECT ... }}` markers; declare their rule sources in `compose`.
-4. Run `pnpm build:skills`. The builder fails loudly if a marker is unresolved or a rule is missing.
+Frontmatter is **build metadata** — it never leaks into model-facing artifacts:
+
+| Target  | Output frontmatter              | Rule bodies |
+|---------|---------------------------------|-------------|
+| agents  | none (pure markdown)            | inlined     |
+| mdc     | description / globs / alwaysApply (Cursor) | inlined |
+| claude  | none (pure markdown)            | inlined     |
+| skills  | none (pure markdown)            | copied to references/ |
+
+Each output dir also gets a `README.md` (for humans) recording the source template and composed rules — not consumed by any model.
+
+## Adding a new template
+
+1. Copy the relevant `_*-skeleton.*` from the template directory.
+2. Fill the frontmatter (`compose` especially) and the body.
+3. For inline products, keep the `{{ INJECT ... }}` markers; declare their rule sources in `compose`.
+4. Run the matching `pnpm build:<target>`. The builder fails loudly on unresolved markers or missing rules.
+
+## Modules
+
+- `paths.ts` — directory constants, INJECT pattern
+- `frontmatter.ts` — YAML frontmatter parser + `composedRuleKeys`
+- `rules.ts` — read a rule and slice it into `## Heading` sections
+- `inject.ts` — inline `{{ INJECT <slot> }}` resolution (for agents/mdc/claude)
+- `template.ts` — load templates from a dir (skips `_`-prefixed skeletons, strips leading authoring comments)
+- `provenance.ts` — render the human-facing README beside each artifact
+- `build/{agents,mdc,claude,skills}.ts` — the four builders
+- `index.ts` — CLI
 
 ## Notes
 
-- `_skill-skeleton.md` (leading underscore) is an authoring guide and is skipped by the builder.
-- Builds are incremental: files are rewritten only when content changes (`writeIfChanged`).
-- The converter currently builds agents.md and skills. Emitting tool-specific formats (Cursor `.mdc`, Claude `CLAUDE.md`, OpenCode) is on the roadmap as additional build targets.
+- Builds are incremental (`writeIfChanged` — no mtime churn for unchanged outputs).
+- `_`-prefixed files in any template dir are authoring skeletons and are skipped.

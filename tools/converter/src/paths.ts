@@ -9,16 +9,18 @@ export const ROOT = PROJECT_ROOT;
 /** Atomic rule knowledge base — the single source of truth. */
 export const RULES_DIR = resolve(PROJECT_ROOT, "rules");
 
-/** Project-level agents.md scaffolds (drop-in project root context). */
+// Template sources — each is a declarative skeleton whose `compose` references rules/.
 export const AGENTS_TEMPLATES_DIR = resolve(PROJECT_ROOT, "agents-templates");
-
-/** SKILL.md skeletons (role + stance + SOP) with INJECT placeholders. */
+export const MDC_TEMPLATES_DIR = resolve(PROJECT_ROOT, "mdc-templates");
+export const CLAUDE_TEMPLATES_DIR = resolve(PROJECT_ROOT, "claude-templates");
 export const SKILLS_TEMPLATES_DIR = resolve(PROJECT_ROOT, "skills-templates");
 
 /** Build output (gitignored). */
 export const DIST_DIR = resolve(PROJECT_ROOT, "dist");
 export const DIST_AGENTS_DIR = resolve(DIST_DIR, "agents");
+export const DIST_MDC_DIR = resolve(DIST_DIR, "cursor");
+export const DIST_CLAUDE_DIR = resolve(DIST_DIR, "claude");
 export const DIST_SKILLS_DIR = resolve(DIST_DIR, "skills");
 
-/** Marker the skill builder replaces with injected rule content. Format: {{ INJECT <slot> }} */
+/** Marker replaced with injected rule content (inline-expansion targets only). Format: {{ INJECT <slot> }} */
 export const INJECT_PATTERN = /\{\{\s*INJECT\s+([\w-]+)\s*\}\}/g;
