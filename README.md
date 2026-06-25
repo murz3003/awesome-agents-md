@@ -6,7 +6,7 @@ English | **[简体中文](./README.zh-CN.md)**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Domains](https://img.shields.io/badge/Domains-11-blue.svg)](#domains)
-[![Rules](https://img.shields.io/badge/Rules-45-green.svg)](#domains)
+[![Rules](https://img.shields.io/badge/Rules-46-green.svg)](#domains)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 
 ---
@@ -143,7 +143,7 @@ awesome-agents-md/
 
 ## 📂 Domains
 
-The collection currently spans **11 domains** with **45 rules**. Each domain is a directory; each task is a standalone `agents.md` file.
+The collection currently spans **11 domains** with **46 rules**. Each domain is a directory; each task is a standalone `agents.md` file.
 
 ### `general/` — Meta-Rules 🧠
 How to work *with* AI agents and how an agent *expresses itself*, applicable across all domains.
@@ -163,6 +163,7 @@ How to work *with* AI agents and how an agent *expresses itself*, applicable acr
 | [human-voice](./rules/general/communication/human-voice.md) | Sounding like a competent human, not a machine (de-AI tone) |
 | [persona-coherence](./rules/general/communication/persona-coherence.md) | Building a stable, believable persona from durable stances |
 | [reply-discipline](./rules/general/communication/reply-discipline.md) | Answering the question first — conclusion-led, on-point replies |
+| [output-hygiene](./rules/general/communication/output-hygiene.md) | Delivering only the finished result, never the internal process |
 
 ### `software-engineering/` — Software Engineering 💻
 | Rule | Description |
@@ -299,7 +300,7 @@ See the [Usage Guide](./docs/usage-guide.md) and [`tools/converter/README.md`](.
 ## 🗺️ Roadmap
 
 - [x] Core domain structure (11 domains)
-- [x] 45 foundational rules
+- [x] 46 foundational rules
 - [x] Consistent agents.md format
 - [ ] [OpenContext specification](./spec/opencontext.md) documentation
 - [x] [Converter tool](./tools/converter/) (TypeScript, pnpm workspace)

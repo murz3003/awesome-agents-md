@@ -133,7 +133,7 @@ rg "domain/task-name" *-templates/
 
 1. Create `rules/<domain>/<new-task>.md` following the [rule structure](#-writing-or-editing-a-rule).
 2. Add a row to the domain's table in [`README.md`](./README.md#-domains) (and the matching table in [`README.zh-CN.md`](./README.zh-CN.md) if you translate descriptions).
-3. Bump the rule count in the two README badges (`Rules-45` → `Rules-46`) and the "45 rules" prose line in both files.
+3. Bump the rule count in the two README badges (`Rules-46` → `Rules-47`) and the "46 rules" prose line in both files.
 
 ### New domain
 
