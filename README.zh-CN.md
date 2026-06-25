@@ -160,7 +160,7 @@ awesome-agents-md/
 
 | 规则 | 描述 |
 |------|------|
-| [human-voice](./rules/general/communication/human-voice.md) | 像能干的人类那样说话，而非机器腔（去 AI 味） |
+| [natural-expression](./rules/general/communication/natural-expression.md) | 像能干的人类那样说话，而非机器腔（去 AI 味） |
 | [persona-coherence](./rules/general/communication/persona-coherence.md) | 从持久的立场出发，构建稳定、可信的人格 |
 | [reply-discipline](./rules/general/communication/reply-discipline.md) | 先回答问题 —— 以结论为先、切题的回复 |
 | [output-hygiene](./rules/general/communication/output-hygiene.md) | 只交付成品，绝不输出内部过程 |

@@ -160,7 +160,7 @@ How to work *with* AI agents and how an agent *expresses itself*, applicable acr
 
 | Rule | Description |
 |------|-------------|
-| [human-voice](./rules/general/communication/human-voice.md) | Sounding like a competent human, not a machine (de-AI tone) |
+| [natural-expression](./rules/general/communication/natural-expression.md) | Sounding like a competent human, not a machine (de-AI tone) |
 | [persona-coherence](./rules/general/communication/persona-coherence.md) | Building a stable, believable persona from durable stances |
 | [reply-discipline](./rules/general/communication/reply-discipline.md) | Answering the question first — conclusion-led, on-point replies |
 | [output-hygiene](./rules/general/communication/output-hygiene.md) | Delivering only the finished result, never the internal process |

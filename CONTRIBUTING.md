@@ -168,7 +168,7 @@ Templates are **declarative skeletons** that pull in rules. Pick the target that
 {{ REF:<target-path>:<rule-key> }}   copy the rule to <target-path> and leave a pointer
 ```
 
-- `<rule-key>` is a path under `rules/` **without** `.md` (a trailing `.md` is tolerated); may nest (`general/communication/human-voice`).
+- `<rule-key>` is a path under `rules/` **without** `.md` (a trailing `.md` is tolerated); may nest (`general/communication/natural-expression`).
 - `<target-path>` in REF is relative to the artifact's output dir.
 
 ### Steps

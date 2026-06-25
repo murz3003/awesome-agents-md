@@ -167,7 +167,7 @@ rg "domain/task-name" *-templates/
 {{ REF:<目标路径>:<规则键> }}       把规则复制到 <目标路径>，此处留一个指针
 ```
 
-- `<规则键>` 是 `rules/` 下的路径，**不带** `.md`（结尾带 `.md` 会被容忍）；可嵌套（`general/communication/human-voice`）。
+- `<规则键>` 是 `rules/` 下的路径，**不带** `.md`（结尾带 `.md` 会被容忍）；可嵌套（`general/communication/natural-expression`）。
 - REF 中的 `<目标路径>` 相对于产物的输出目录。
 
 ### 步骤

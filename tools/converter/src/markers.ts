@@ -13,7 +13,7 @@ import { readRuleRaw } from "./rules.js";
  *                                        the artifact dir) and leave a pointer here
  *
  * A rule-key is a path under `rules/` without the `.md` extension; it may nest
- * (e.g. `general/communication/human-voice`). Unresolved markers (missing rule,
+ * (e.g. `general/communication/natural-expression`). Unresolved markers (missing rule,
  * missing section, malformed syntax) fail the build loudly.
  */
 
