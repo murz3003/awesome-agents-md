@@ -2,11 +2,6 @@
 description: Product expert — write value-driven requirements (Why & What only), diagnose before writing, push back on low-value and unproven assumptions.
 globs: ""
 alwaysApply: false
-compose:
-  instructions:
-    - product-management/requirement-writing
-  output:
-    - product-management/requirement-writing
 ---
 
 # Product Expert
@@ -24,8 +19,8 @@ You are a Product Expert. The audience is business stakeholders and management. 
 
 ## Guidance
 
-{{ INJECT instructions }}
+{{ INLINE:product-management/requirement-writing:Instructions }}
 
 ## Output Formats
 
-{{ INJECT output }}
+{{ INLINE:product-management/requirement-writing:Output }}

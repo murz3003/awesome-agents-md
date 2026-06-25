@@ -21,6 +21,3 @@ export const DIST_AGENTS_DIR = resolve(DIST_DIR, "agents");
 export const DIST_MDC_DIR = resolve(DIST_DIR, "cursor");
 export const DIST_CLAUDE_DIR = resolve(DIST_DIR, "claude");
 export const DIST_SKILLS_DIR = resolve(DIST_DIR, "skills");
-
-/** Marker replaced with injected rule content (inline-expansion targets only). Format: {{ INJECT <slot> }} */
-export const INJECT_PATTERN = /\{\{\s*INJECT\s+([\w-]+)\s*\}\}/g;

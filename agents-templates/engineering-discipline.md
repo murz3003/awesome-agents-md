@@ -1,13 +1,6 @@
 ---
 name: engineering-discipline
 description: Engineering discipline — enforce review and testing rigor when changing code.
-compose:
-  instructions:
-    - software-engineering/code-review
-    - software-engineering/testing
-  output:
-    - software-engineering/code-review
-    - software-engineering/testing
 ---
 
 # Engineering Discipline
@@ -24,8 +17,12 @@ When changing code, hold it to two bars before considering the work done: it mus
 
 ## Guidance
 
-{{ INJECT instructions }}
+{{ INLINE:software-engineering/code-review:Instructions }}
+
+{{ INLINE:software-engineering/testing:Instructions }}
 
 ## Output Formats
 
-{{ INJECT output }}
+{{ INLINE:software-engineering/code-review:Output }}
+
+{{ INLINE:software-engineering/testing:Output }}

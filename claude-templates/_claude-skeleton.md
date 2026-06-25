@@ -2,21 +2,28 @@
   CLAUDE.md skeleton — authoring guide only (leading-underscore name → builder skips it).
   Copy this to <your-profile>.md under claude-templates/ to start.
 
-  claude templates produce self-contained CLAUDE.md files (inline expansion): the rule
-  bodies named in `compose` are spliced where `{{ INJECT <slot> }}` appears. The frontmatter
-  below is build metadata only — the builder strips it; the output is pure markdown.
-  Output goes to dist/claude/<name>/CLAUDE.md.
+  Marker-driven composition (no `compose` in frontmatter). Declare rule composition in the BODY:
+    {{ INLINE:<rule-key> }}              splice a rule's whole body here
+    {{ INLINE:<rule-key>:<section> }}    splice one `## <section>` body (e.g. :Instructions)
+    {{ REF:<path>:<rule-key> }}          copy the rule to <path> (relative to this artifact's
+                                         dir) and leave a pointer here
+  <rule-key> is a path under rules/ (with or without .md), e.g. product-management/requirement-writing.
+  The frontmatter is build metadata only — the output is pure markdown (CLAUDE.md has no
+  frontmatter convention), dropped into a project root as CLAUDE.md.
 -->
 ---
 name: <profile-name>
-description: <One line: what this profile enforces>
-# compose: rule keys (path under rules/, without .md) spliced into each slot in order.
-compose:
-  instructions: []      # e.g. [ software-engineering/testing ]
+description: <One line: what this CLAUDE.md profile enforces>
 ---
 
 # <Profile Display Name>
 
-<Optional framing paragraph. Keep it short — this is project-root context.>
+<Optional framing paragraph: what stance this project-root context enforces. Keep it short.>
 
-{{ INJECT instructions }}
+## Guidance
+
+{{ INLINE:product-management/requirement-writing:Instructions }}
+
+## Output
+
+{{ INLINE:product-management/requirement-writing:Output }}

@@ -1,44 +1,61 @@
-import { composedRuleKeys, type ComposeSpec } from "./frontmatter.js";
-
 /**
  * Render the human-facing README that ships beside each generated artifact.
- * Describes WHAT was generated and HOW (source template + composed rules), so a
- * reader can trace provenance without reading the build tool. It is NOT consumed by
- * any model — the artifact itself (agents.md / SKILL.md / .mdc / CLAUDE.md) is.
  *
- * `mode` describes how rules enter the artifact: "inlined" (spliced into the body) or
- * "referenced" (copied under references/ and pointed at).
+ * This README describes the artifact **as a thing in itself** — what it is and how to use
+ * it — exactly as a hand-written README would. It deliberately does NOT reveal how the
+ * artifact was assembled (which source rules were inlined vs referenced): from this README's
+ * vantage point, the artifact simply *is* what it is. The main artifact file (agents.md /
+ * SKILL.md / .mdc / CLAUDE.md) is the source of truth; this README orients a human reader.
+ *
+ * Description material is pulled from the artifact's own body (its opening framing or a named
+ * section like `## Description`), with the frontmatter `description` as a one-line fallback.
+ */
+
+/**
+ * Extract a self-description from an artifact body, to summarize what it is in its own words.
+ * Uses a `## Description` section when the artifact carries one (the skill convention); these
+ * artifacts are written as descriptive prose. Structured artifacts (agents/claude/mdc) don't
+ * have such a section — they return "" here and rely on their frontmatter tagline instead,
+ * rather than mining a list-item or heading that isn't actually a description.
+ */
+export function extractDescription(body: string): string {
+  const sectionMatch = body.match(/^##\s+Description\s*\n([\s\S]*?)(?=\n##\s|$)/im);
+  return sectionMatch ? sectionMatch[1].trim() : "";
+}
+
+/**
+ * Render the README for an artifact.
+ *
+ * @param artifactFile  Filename of the artifact (e.g. "agents.md", "SKILL.md", "CLAUDE.md").
+ * @param name          Artifact name (the output directory / profile name).
+ * @param description   One-line description from frontmatter (the tagline).
+ * @param body          The artifact's own body (to mine a richer self-description from, if any).
+ * @param usageNote     How a consumer drops this artifact into their tool (tool-specific).
  */
 export function renderProvenance(
   artifactFile: string,
   name: string,
-  sourceDir: string,
-  compose: ComposeSpec,
-  mode: "inlined" | "referenced",
+  description: string,
+  body: string,
+  usageNote: string,
 ): string {
-  const sourceExt = sourceDir === "mdc-templates" ? ".mdc" : ".md";
-  const rules = composedRuleKeys(compose);
-  const ruleLines = rules.length
-    ? rules.map((k) => `- \`rules/${k}.md\``).join("\n")
-    : "_No rules composed — this artifact carries all its own content._";
+  const selfDesc = extractDescription(body);
+  const tagline = (description ?? "").trim().replace(/\.+$/, "");
 
-  const modeNote =
-    mode === "inlined"
-      ? "Rule content is **inlined** into this file (self-contained)."
-      : "Rule files are copied into a sibling `references/` directory and referenced by relative path.";
+  const aboutBlock = selfDesc || (tagline ? `${tagline}.` : "_No description available._");
 
-  return `# ${name} — ${artifactFile}
+  return `# ${name}
 
-Generated from \`${sourceDir}/${name}${sourceExt}\`.
+${aboutBlock}
 
-${modeNote}
+## What this is
 
-## Composed Rules
+\`${artifactFile}\`${tagline ? ` — ${tagline}.` : ""}
 
-${ruleLines}
+${usageNote}
 
 ---
 
-_Regenerate with \`pnpm build\`. Edit the source template, not this output._
+_Regenerate with \`pnpm build\`._
 `;
 }

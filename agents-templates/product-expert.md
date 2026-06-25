@@ -1,11 +1,6 @@
 ---
 name: product-expert
 description: Project-level agents.md tuned for product / requirement work — biases toward business value over implementation detail.
-compose:
-  instructions:
-    - product-management/requirement-writing
-  output:
-    - product-management/requirement-writing
 ---
 
 # Product Expert Mode
@@ -56,11 +51,11 @@ compose:
 
 ## Requirement Writing Guidance
 
-{{ INJECT instructions }}
+{{ INLINE:product-management/requirement-writing:Instructions }}
 
 ## Output Formats
 
-{{ INJECT output }}
+{{ INLINE:product-management/requirement-writing:Output }}
 
 ## Core Directive
 

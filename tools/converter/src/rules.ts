@@ -16,14 +16,20 @@ const HEADING = /^##\s+(.+?)\s*$/;
 
 /** Read a rule file and split it into sections keyed by level-2 heading. */
 export function readRuleSections(ruleKey: string): RuleSections {
-  const file = resolve(RULES_DIR, `${ruleKey}.md`);
+  return sliceSections(readRuleRaw(ruleKey));
+}
+
+/** Read a rule's full body (frontmatter-free, trimmed). Throws if the rule is missing. */
+export function readRuleRaw(ruleKey: string): string {
+  const key = ruleKey.replace(/\.md$/i, ""); // tolerate a trailing .md in markers
+  const file = resolve(RULES_DIR, `${key}.md`);
   let raw: string;
   try {
     raw = readFileSync(file, "utf8");
   } catch {
     throw new Error(`Rule not found: ${ruleKey} (looked at ${file})`);
   }
-  return sliceSections(raw);
+  return raw.trim();
 }
 
 export function sliceSections(raw: string): RuleSections {
