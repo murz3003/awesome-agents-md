@@ -27,7 +27,7 @@ Two markers, both whitespace-tolerant, both usable in **any** of the four templa
                                       artifact's output dir) and leave a pointer here
 ```
 
-- `<rule-key>` is a path under `rules/`, **without** the `.md` extension (a trailing `.md` is tolerated). It may nest, e.g. `general/communication/human-voice`.
+- `<rule-key>` is a path under `rules/`, **without** the `.md` extension (a trailing `.md` is tolerated). It may nest, e.g. `general/communication/natural-expression`.
 - `<target-path>` in a REF is relative to the artifact's output directory (e.g. `references/requirement-writing.md`).
 - INLINE splices the content directly. REF copies the rule file to its target path and replaces the marker with an inline-code pointer (`` `references/...` ``).
 - The same rule can appear in multiple markers (INLINE in several places, REF to several targets, or both). The builder dedupes the *file copies*.

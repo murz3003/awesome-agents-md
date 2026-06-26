@@ -132,7 +132,7 @@ rg "domain/task-name" *-templates/
 
 1. 按[规则结构](#-编写或修订一条规则)创建 `rules/<domain>/<new-task>.md`。
 2. 在 [`README.md`](./README.md#-domains)（以及 [`README.zh-CN.md`](./README.zh-CN.md#-领域)，若你翻译了描述）的该领域表格中新增一行。
-3. 把两个 README 中的徽章规则计数（`Rules-45` → `Rules-46`）以及正文中“45 条规则”的描述同步更新。
+3. 把两个 README 中的徽章规则计数（`Rules-48` → `Rules-49`）以及正文中“48 条规则”的描述同步更新。
 
 ### 新增领域
 
@@ -167,7 +167,7 @@ rg "domain/task-name" *-templates/
 {{ REF:<目标路径>:<规则键> }}       把规则复制到 <目标路径>，此处留一个指针
 ```
 
-- `<规则键>` 是 `rules/` 下的路径，**不带** `.md`（结尾带 `.md` 会被容忍）；可嵌套（`general/communication/human-voice`）。
+- `<规则键>` 是 `rules/` 下的路径，**不带** `.md`（结尾带 `.md` 会被容忍）；可嵌套（`general/communication/natural-expression`）。
 - REF 中的 `<目标路径>` 相对于产物的输出目录。
 
 ### 步骤

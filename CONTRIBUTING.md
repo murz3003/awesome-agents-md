@@ -133,7 +133,7 @@ rg "domain/task-name" *-templates/
 
 1. Create `rules/<domain>/<new-task>.md` following the [rule structure](#-writing-or-editing-a-rule).
 2. Add a row to the domain's table in [`README.md`](./README.md#-domains) (and the matching table in [`README.zh-CN.md`](./README.zh-CN.md) if you translate descriptions).
-3. Bump the rule count in the two README badges (`Rules-45` → `Rules-46`) and the "45 rules" prose line in both files.
+3. Bump the rule count in the two README badges (`Rules-48` → `Rules-49`) and the "48 rules" prose line in both files.
 
 ### New domain
 
@@ -168,7 +168,7 @@ Templates are **declarative skeletons** that pull in rules. Pick the target that
 {{ REF:<target-path>:<rule-key> }}   copy the rule to <target-path> and leave a pointer
 ```
 
-- `<rule-key>` is a path under `rules/` **without** `.md` (a trailing `.md` is tolerated); may nest (`general/communication/human-voice`).
+- `<rule-key>` is a path under `rules/` **without** `.md` (a trailing `.md` is tolerated); may nest (`general/communication/natural-expression`).
 - `<target-path>` in REF is relative to the artifact's output dir.
 
 ### Steps
